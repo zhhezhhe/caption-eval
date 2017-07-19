@@ -9,7 +9,8 @@ import json
 import os
 import pylab
 import sys
-
+reload(sys)
+sys.setdefaultencoding('utf8')
 sys.path.append('./coco-caption/')
 from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
@@ -29,11 +30,13 @@ class CocoResFormat:
     with open(filename,'r') as opfd:
       for line in opfd:
         count +=1
-        id_sent = line.strip().split('\t')
+        id_sent = line.strip().split(':')
+
         if len(id_sent)>2:
           id_sent = id_sent[-2:]
         assert len(id_sent) == 2
-        sent = id_sent[1].decode('ascii', 'ignore')
+        sent = id_sent[1]
+
 
         if hash_img_name:
           img_id = int(int(hashlib.sha256(id_sent[0]).hexdigest(),
@@ -55,6 +58,7 @@ class CocoResFormat:
 
   def dump_json(self, outfile):
     res = self.res
+
     with io.open(outfile, 'w', encoding='utf-8') as fd:
       fd.write(unicode(json.dumps(res,
          ensure_ascii=False,sort_keys=True,indent=2,separators=(',', ': '))))

@@ -57,13 +57,15 @@ class CocoAnnotations:
 
   def read_file(self,filename):
     count = 0
+
     with open(filename,'r') as opfd:
       for line in opfd:
         count +=1
-        id_sent = line.strip().split('\t')
+        id_sent = line.strip().split(':')
         assert len(id_sent)==2
-        sent = id_sent[1].decode('ascii', 'ignore')
+        sent = id_sent[1]
         image_dict,image_hash = self.get_image_dict(id_sent[0])
+
         self.images.append(image_dict)
         
         self.annotations.append({
